@@ -7,11 +7,29 @@ import (
 	"net/http"
 )
 
+type CreateOrderRequest struct {
+	CustomerID uint `json:"customer_id"`
+	Products   []struct {
+		ID       uint `json:"id"`
+		Quantity uint `json:"quantity"`
+	} `json:"products"`
+}
+
 func CreateOrder(c *gin.Context) {
-	var o models.Order
+	var req CreateOrderRequest
 	var err error
-	_ = c.BindJSON(&o)
-	err = models.CreateOrder(&o)
+
+	_ = c.BindJSON(&req)
+	cid := req.CustomerID
+	var ProductIDs []uint
+	var Quantities []uint
+	for _, product := range req.Products {
+		ProductIDs = append(ProductIDs, product.ID)
+		Quantities = append(Quantities, product.Quantity)
+	}
+	fmt.Println("Customer ID", cid)
+	o := models.Order{CustomerID: cid}
+	err = models.BatchCreateOrderBookByOrderID(&o, ProductIDs, Quantities)
 	if err != nil {
 		fmt.Println(err.Error())
 		c.AbortWithStatus(http.StatusBadRequest)
