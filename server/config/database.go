@@ -2,7 +2,6 @@ package Config
 
 import (
 	"fmt"
-	"github.com/zahlekhan/retailer/server/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -41,40 +40,6 @@ func dbURL(dbConfig *DBConfig) string {
 		dbConfig.Port,
 		dbConfig.DBName,
 	)
-}
-
-func Migrations() error {
-
-	DB, err := ConnectDB()
-	if err != nil {
-		return err
-	}
-
-	err = DB.Migrator().DropTable(&models.Customer{}, &models.Product{}, &models.Order{}, &models.OrderBook{}, "order_products")
-	if err != nil {
-		return err
-	}
-
-	if err = DB.AutoMigrate(&models.Customer{}); err != nil {
-		return err
-	}
-	if err = DB.AutoMigrate(&models.Product{}); err != nil {
-		return err
-	}
-	if err = DB.AutoMigrate(&models.Order{}); err != nil {
-		return err
-	}
-
-	err = DB.SetupJoinTable(&models.Order{}, "Products", &models.OrderBook{})
-	if err != nil {
-		return err
-	}
-
-	if err = DB.AutoMigrate(&models.OrderBook{}); err != nil {
-		return err
-	}
-
-	return nil
 }
 
 // ConnectDB opens a connection to the database

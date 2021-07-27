@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/joho/godotenv"
-	Config "github.com/zahlekhan/retailer/server/config"
+	Migration "github.com/zahlekhan/retailer/server/migration"
 	Routes "github.com/zahlekhan/retailer/server/routes"
 )
 
@@ -13,7 +13,7 @@ func main() {
 		fmt.Println(err)
 	}
 
-	if err := Config.Migrations(); err != nil {
+	if err := Migration.Migrations(); err != nil {
 		fmt.Println(err)
 	}
 
