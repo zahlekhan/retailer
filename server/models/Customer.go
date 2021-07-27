@@ -5,13 +5,18 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 	"net/mail"
+	"time"
 )
 
 type Customer struct {
-	gorm.Model
-	Email    string `gorm:"size:100;not null;unique" json:"email"`
-	Password string `gorm:"size:100;not null;" json:"password"`
-	Orders   []Order
+	ID          uint `gorm:"primaryKey" json:"id"`
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	DeletedAt   gorm.DeletedAt `gorm:"index"`
+	Email       string         `gorm:"size:100;not null;unique" json:"email"`
+	Password    string         `gorm:"size:100;not null;" json:"password"`
+	Orders      []Order
+	LastOrderAt time.Time
 }
 
 func Hash(password string) ([]byte, error) {

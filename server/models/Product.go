@@ -4,13 +4,17 @@ import (
 	"errors"
 	Config "github.com/zahlekhan/retailer/server/config"
 	"gorm.io/gorm"
+	"time"
 )
 
 type Product struct {
-	gorm.Model
-	Name     string `gorm:"size:100;not null;unique" json:"name"`
-	Price    uint   `gorm:"check:(price >=0);not null" json:"price"`
-	Quantity uint   `gorm:"check:(price >=0);not null" json:"quantity"`
+	ID        uint           `gorm:"primaryKey" json:"id"`
+	CreatedAt time.Time      `json:"-"`
+	UpdatedAt time.Time      `json:"-"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
+	Name      string         `gorm:"size:100;not null;unique" json:"name"`
+	Price     uint           `gorm:"check:(price >=0);not null" json:"price"`
+	Quantity  uint           `gorm:"check:(price >=0);not null" json:"quantity"`
 }
 
 func CreateProduct(p *Product) error {
